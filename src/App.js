@@ -1,23 +1,49 @@
-import logo from './logo.svg';
+
 import './App.css';
+import Cocktail from './Cocktail';
+import { useState, useEffect } from 'react'
+import Search from './Search';
+
 
 function App() {
+
+
+  const [data, setData] = useState(null)
+
+
+  const getCocktail = async () => {
+    const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/random.php')
+    const responseData = await response.json()
+    setData(responseData)
+  }
+
+
+  useEffect(() => {
+    getCocktail()
+  }, [])
+
+
+
+
+
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>
+
+        {
+          data === null
+            ? <h1>Loading..</h1>
+            : (
+              <>
+                <Cocktail data={data.drinks[0]} />
+                <Search props={data.drinks[0]} />
+              </>
+            )
+        }
+
+      </div>
     </div>
   );
 }
